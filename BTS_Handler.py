@@ -1,6 +1,7 @@
 ######################################################################
 # Creator: Antti Suomela
-# Date: 13.1.2024
+# Date: 13.1.2024 (original version)
+# Version 1: 21.1.2024
 # Handling of BTS information
 #######################################################################
 # Globals
@@ -14,7 +15,6 @@ class CELLS:
     site = ""
     cell = ""
 
-
 #######################################################################
 # Subprograms
 
@@ -23,6 +23,13 @@ def read(list):
     filename = input("Enter the file name and path: ")
     try:
         file = open(filename, "r", encoding="utf-8")
+        header = file.readline()[:-1]           # read header line
+
+
+
+
+
+
         while True:
             line = file.readline()[:-1]         # leave line change out of the read
             if (len(line) == 0):
@@ -55,11 +62,7 @@ def handler(list):
         else:
             Other += 1
     print("LTE cells: {0}\nNR cells: {1}\nGSM cells: {2}\nOther System: {3}".format(LTE,NR,GSM,Other))
-
-
-
     return
-
 
 def main():
     list = []
