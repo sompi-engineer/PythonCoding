@@ -15,20 +15,38 @@ class CELLS:
     site = ""
     cell = ""
 
+REQUIRED_PARAMETERS = ['SYSTEM', 'CELL', 'SITE']
+
 #######################################################################
 # Subprograms
 
 
 def read(list):
     filename = input("Enter the file name and path: ")
+    header_list = []
+    system_no = 0
+    site_no = 0
+    cell_no = 0
+    number = 0
     try:
         file = open(filename, "r", encoding="utf-8")
-        header = file.readline()[:-1]           # read header line
+        header_list = file.readline().split(SEPARATOR)[:-1]           # read header line, split parameters with SEPARATOR and leave line change out
+        print("File contains following parameters: ", header_list, "\n")
+        
+        if all(element in header_list for element in REQUIRED_PARAMETERS):
+            pass
+        else:
+            print("Missing mandatory parameters {0}, closing...".format(REQUIRED_PARAMETERS))
+            sys.exit()
 
-
-
-
-
+        for parameter in header_list:
+            if parameter == "SYSTEM":
+                system_no = number
+            elif parameter == "SITE":
+                site_no = number
+            elif parameter == "CELL":
+                cell_no = number
+            number += 1
 
         while True:
             line = file.readline()[:-1]         # leave line change out of the read
@@ -36,15 +54,15 @@ def read(list):
                 break
             column = line.split(SEPARATOR)
             cell = CELLS()
-            cell.system = column[0]
-            cell.site = column[1]
-            cell.cell = column[2]
+            cell.system = column[system_no]
+            cell.site = column[site_no]
+            cell.cell = column[cell_no]
             list.append(cell)
         file.close()
     except Exception:
         print("Problem with file handling, closing...")
         sys.exit()
-    print("File read successfully.")
+    #print("File read successfully.\n")
     return list
 
 def handler(list):
@@ -61,7 +79,7 @@ def handler(list):
             GSM += 1
         else:
             Other += 1
-    print("LTE cells: {0}\nNR cells: {1}\nGSM cells: {2}\nOther System: {3}".format(LTE,NR,GSM,Other))
+    print("LTE cells: {0}\nNR cells: {1}\nGSM cells: {2}\nOther System: {3}\n".format(LTE,NR,GSM,Other))
     return
 
 def main():
