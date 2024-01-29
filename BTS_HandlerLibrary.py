@@ -16,6 +16,7 @@ REQUIRED_PARAMETERS = ['SYSTEM', 'CELL', 'SITE']
 #######################################################################
 # Functions
 
+# Read given txt file, take header information and stores cell information to class
 def read(list):
     filename = input("Enter the file name and path: ")
     header_list = []
