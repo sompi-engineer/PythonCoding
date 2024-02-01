@@ -14,8 +14,8 @@ import BTS_HandlerLibrary
 
 if __name__ == "__main__":
     list = []
-    print("\nOptions")
     while (True):
+        print("\nOptions")
         print("1) Read BTS file content (.txt)")
         print("2) Shows the number of cells in systems")
         print("3) Find cell information")
@@ -29,6 +29,8 @@ if __name__ == "__main__":
             list = BTS_HandlerLibrary.read(list)
         elif (selection == 2):
             BTS_HandlerLibrary.handler(list)
+        elif (selection == 3):
+            BTS_HandlerLibrary.cellfinder(list)
         else:
             print("Invalid selection, try again...")
             

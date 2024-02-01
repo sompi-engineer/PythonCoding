@@ -59,18 +59,33 @@ def read(list):
     #print("File read successfully.\n")
     return list
 
+# Search and list cells by systems
 def handler(list):
-    system = {"LTE": 0, "NR": 0, "GSM": 0, "UMTS": 0, "Other": 0}
+    if (len(list) == 0):
+        print("List is empty, try to import file first\n")
+    else:
+        system = {"LTE": 0, "NR": 0, "GSM": 0, "UMTS": 0, "Other": 0}
+        print("Cells by system:")
+        for cell in list:
+            if cell.system == "LTE":
+                system["LTE"] += 1
+            elif cell.system == "NR":
+                system["NR"] += 1
+            elif cell.system == "GSM":
+                system["GSM"] += 1
+            elif cell.system == "UMTS":
+                system["UMTS"] += 1
+            else:
+                system["Other"] += 1
+        print("LTE cells: {0}\nNR cells: {1}\nGSM cells: {2}\nUMTS cells: {3}\nOther System: {4}\n".format(system["LTE"],system["NR"],system["GSM"],system["UMTS"],system["Other"]))
+    return None
+
+def cellfinder(list):
+    findSite = input("Give site name to search: ")
     for cell in list:
-        if cell.system == "LTE":
-            system["LTE"] += 1
-        elif cell.system == "NR":
-            system["NR"] += 1
-        elif cell.system == "GSM":
-            system["GSM"] += 1
-        elif cell.system == "UMTS":
-            system["UMTS"] += 1
-        else:
-            system["Other"] += 1
-    print("LTE cells: {0}\nNR cells: {1}\nGSM cells: {2}\nUMTS cells: {3}\nOther System: {4}\n".format(system["LTE"],system["NR"],system["GSM"],system["UMTS"],system["Other"]))
-    return
+        if cell.site == findSite:
+            print(cell.site)
+            
+        
+
+    return None
