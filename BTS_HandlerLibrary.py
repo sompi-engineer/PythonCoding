@@ -4,7 +4,7 @@
 # Globals
 import sys
 
-SEPARATOR = ","
+# SEPARATOR = ";"
 
 class CELLS:
     system = ""
@@ -30,14 +30,26 @@ REQUIRED_PARAMETERS = ['SYSTEM', 'CELL', 'SITE']
 
 # Read given txt file, take header information and stores cell information to class
 def read(list):
-    filename = input("Enter the file name and path: ")
+    user_input = input("Give text file (example 'bts.txt') and separator, exit with 0: ").strip()
+        # Check if the user wants to exit
+    if user_input == "0":
+        return None
+    try:
+        # Try to split the input into parameter and value
+        filename, separator = user_input.split()
+    except ValueError:
+        # Handle case where input does not split into exactly two parts
+        print("Invalid input. Please provide a text file and a separator separated by space, or '0' to exit.\n")
+        read(list)
+        return
+
     header_list = []
     parameter_no = {"system_no": 0, "site_no": 0, "cell_no": 0, "ch_no": 0, "cid_no": 0, "pci_no": 0, "tac_no": 0, "dir_no": 0, "lat_no": 0, "lon_no": 0, "vendor_no": 0, "range_no": 0, "beam_no": 0, "bsic_no": 0, "lac_no":0}
     number = 0
     try:
         file = open(filename, "r", encoding="utf-8")
         header = file.readline()[:-1]                   # read header line
-        header_list = header.split(SEPARATOR)           # split parameters with SEPARATOR and store to list
+        header_list = header.split(separator)           # split parameters with SEPARATOR and store to list
         print("File contains following parameters: ", header_list, "\n")
         # Check that file contains the required parameters, if not exit the program
         if all(element in header_list for element in REQUIRED_PARAMETERS):
@@ -83,7 +95,7 @@ def read(list):
             line = file.readline()[:-1]         # leave line change out of the read
             if (len(line) == 0):
                 break
-            column = line.split(SEPARATOR)
+            column = line.split(separator)
             cell = CELLS()
             cell.system = column[parameter_no["system_no"]]
             cell.site = column[parameter_no["site_no"]]
@@ -110,7 +122,8 @@ def read(list):
 
 # Search and list cells by systems
 def handler(list):
-    if (len(list) == 0):
+    # if (len(list) == 0):
+    if not list:
         print("List is empty, try to import file first\n")
     else:
         system = {"LTE": 0, "NR": 0, "GSM": 0, "UMTS": 0, "Other": 0}
@@ -126,12 +139,30 @@ def handler(list):
                 system["UMTS"] += 1
             else:
                 system["Other"] += 1
-        print("LTE cells: {0}\nNR cells: {1}\nGSM cells: {2}\nUMTS cells: {3}\nOther System: {4}\n".format(system["LTE"],system["NR"],system["GSM"],system["UMTS"],system["Other"]))
+        print(f'LTE cells: {system["LTE"]}\nNR cells: {system["NR"]}\nGSM cells: {system["GSM"]}\nUMTS cells: {system["UMTS"]}\nOther System: {system["Other"]}\n')
     return None
 
 def cellfinder(list):
-    findSite = input("Give site name to search: ")
+    user_input = input("Give parameter and value, exit with 0: ").strip()
+    # Check if the user wants to exit
+    if user_input == "0":
+        return None 
+    try:
+        # Try to split the input into parameter and value
+        parameter, value = user_input.split()
+    except ValueError:
+        # Handle case where input does not split into exactly two parts
+        print("Invalid input. Please provide a parameter and a value separated by space, or '0' to exit.\n")
+        cellfinder(list)
+        return
+    
+    found = False
     for cell in list:
-        if cell.site == findSite:
-            print("System: {0}\nSite: {1}\nCell: {2}\nChannel: {3}\nCID: {4}\nPCI: {5}\nTAC: {6}\nDirection: {6}\nLatitude: {7}\nLongitude: {8}\nVendor: {9}\nRange: {10}\nBeam width: {11}\nBSIC: {12}\nLAC: {13}\n".format(cell.system,cell.site,cell.cell,cell.ch,cell.cid,cell.pci,cell.tac,cell.dir,cell.lat,cell.lon,cell.vendor,cell.range,cell.beam,cell.bsic,cell.lac))
+        if getattr(cell, parameter, None) == value:
+            found = True
+            print(f"System: {cell.system}\nSite: {cell.site}\nCell: {cell.cell}\nChannel: {cell.ch}\nCID: {cell.cid}\nPCI: {cell.pci}\nTAC: {cell.tac}\nDirection: {cell.dir}\nLatitude: {cell.lat}\nLongitude: {cell.lon}\nVendor: {cell.vendor}\nRange: {cell.range}\nBeam width: {cell.beam}\nBSIC: {cell.bsic}\nLAC: {cell.lac}")
+            print("\n")
+    if not found:
+        print("Cells not found, try again\n")
+        cellfinder(list)
     return None
