@@ -33,7 +33,7 @@ class CELLS:
 
 # Read given txt file, take header information and stores cell information to class
 def read(list):
-    user_input = input("Give text file (example 'bts.txt') and separator, exit with 0: ").strip()
+    user_input = input("Give text file (example 'bts.txt') and a separator separated by space, exit with 0: ").strip()
         # Check if the user wants to exit
     if user_input == "0":
         return list
@@ -54,7 +54,7 @@ def read(list):
         file = open(filename, "r", encoding="utf-8")
         header = file.readline()[:-1]                   # read header line, exclude line change
         header_list = header.split(separator)           # split parameters with separator and store them to the header_list
-        print("File contains following parameters: ", header_list, "\n")
+        print("\nFile contains following parameters: ", header_list, "\n")
         # Check that file contains the required parameters, if not exit the program
         if all(element in header_list for element in REQUIRED_PARAMETERS):
             pass
@@ -127,9 +127,8 @@ def read(list):
 
 # Search and list cells by systems
 def handler(list):
-    # if (len(list) == 0):
     if not list:
-        print("List is empty, try to import file first\n")
+        print("List is empty, try to import file first.\n")
     else:
         system = {"LTE": 0, "NR": 0, "GSM": 0, "UMTS": 0, "Other": 0}
         print("Cells by system:")
@@ -148,27 +147,31 @@ def handler(list):
     return None
 
 def cellfinder(list):
-    print("Available parameters:",CELLS.get_variables())
-    user_input = input("Give parameter and value, exit with 0: ").strip()
-    # Check if the user wants to exit
-    if user_input == "0":
-        return None 
-    try:
-        # Try to split the input into parameter and value
-        parameter, value = user_input.split()
-    except ValueError:
-        # Handle case where input does not split into exactly two parts
-        print("Invalid input. Please provide a parameter and a value separated by space, or '0' to exit.\n")
-        cellfinder(list)
-        return
-    
-    found = False
-    for cell in list:
-        if getattr(cell, parameter, None) == value:
-            found = True
-            print(f"System: {cell.system}\nSite: {cell.site}\nCell: {cell.cell}\nChannel: {cell.ch}\nCID: {cell.cid}\nPCI: {cell.pci}\nTAC: {cell.tac}\nDirection: {cell.dir}\nLatitude: {cell.lat}\nLongitude: {cell.lon}\nVendor: {cell.vendor}\nRange: {cell.range}\nBeam width: {cell.beam}\nBSIC: {cell.bsic}\nLAC: {cell.lac}")
-            print("\n")
-    if not found:
-        print("Cells not found, try again\n")
-        cellfinder(list)
+    if not list:
+        print("List is empty, try to import file first.\n")
+    else:
+        print("Available parameters:",CELLS.get_variables())
+        user_input = input("Give parameter and value separated by space, exit with 0: ").strip()
+        # Check if the user wants to exit
+        if user_input == "0":
+            return None 
+        try:
+            # Try to split the input into parameter and value
+            parameter, value = user_input.split()
+        except ValueError:
+            # Handle case where input does not split into exactly two parts
+            print("Invalid input. Please provide a parameter and a value separated by space, or '0' to exit.\n")
+            cellfinder(list)
+            return
+        
+        found = False
+        print("\n")
+        for cell in list:
+            if getattr(cell, parameter, None) == value:
+                found = True
+                print(f"System: {cell.system}\nSite: {cell.site}\nCell: {cell.cell}\nChannel: {cell.ch}\nCID: {cell.cid}\nPCI: {cell.pci}\nTAC: {cell.tac}\nDirection: {cell.dir}\nLatitude: {cell.lat}\nLongitude: {cell.lon}\nVendor: {cell.vendor}\nRange: {cell.range}\nBeam width: {cell.beam}\nBSIC: {cell.bsic}\nLAC: {cell.lac}")
+                print("\n")
+        if not found:
+            print("Cells not found, try again\n")
+            cellfinder(list)
     return None
