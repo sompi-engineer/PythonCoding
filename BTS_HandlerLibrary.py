@@ -4,8 +4,6 @@
 # Globals
 import sys
 
-# SEPARATOR = ";"
-
 class CELLS:
     system = ""
     site = ""
@@ -117,7 +115,7 @@ def read(list):
     except Exception:
         print("Problem with file handling, closing...")
         sys.exit()
-    #print("File read successfully.\n")
+    header_list.clear()
     return list
 
 # Search and list cells by systems
