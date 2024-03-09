@@ -1,7 +1,6 @@
 ######################################################################
 # Creator: Antti Suomela
-# Date: 13.1.2024 (original version)
-# Handling of BTS information
+# Handling BTS information
 #######################################################################
 # Globals
 
@@ -33,6 +32,5 @@ if __name__ == "__main__":
             print("Invalid selection, try again...")
             
     list.clear()
-
 
 #eof

@@ -1,8 +1,10 @@
 #######################################################################
 # Library
+import sys
+
 #######################################################################
 # Globals
-import sys
+REQUIRED_PARAMETERS = ['SYSTEM', 'CELL', 'SITE']
 
 class CELLS:
     system = ""
@@ -21,7 +23,10 @@ class CELLS:
     bsic = 0
     lac = 0
 
-REQUIRED_PARAMETERS = ['SYSTEM', 'CELL', 'SITE']
+    @classmethod
+    def get_variables(cls):
+        special_attrs = {'__module__', '__dict__', '__weakref__', '__doc__', 'get_variables'}
+        return ', '.join(attr for attr in vars(cls).keys() if attr not in special_attrs)
 
 #######################################################################
 # Functions
@@ -31,23 +36,24 @@ def read(list):
     user_input = input("Give text file (example 'bts.txt') and separator, exit with 0: ").strip()
         # Check if the user wants to exit
     if user_input == "0":
-        return None
+        return list
     try:
-        # Try to split the input into parameter and value
+        # Try to split the input into filename and separator
         filename, separator = user_input.split()
     except ValueError:
         # Handle case where input does not split into exactly two parts
         print("Invalid input. Please provide a text file and a separator separated by space, or '0' to exit.\n")
         read(list)
-        return
+        return list
 
     header_list = []
-    parameter_no = {"system_no": 0, "site_no": 0, "cell_no": 0, "ch_no": 0, "cid_no": 0, "pci_no": 0, "tac_no": 0, "dir_no": 0, "lat_no": 0, "lon_no": 0, "vendor_no": 0, "range_no": 0, "beam_no": 0, "bsic_no": 0, "lac_no":0}
+    parameter_no = {"system_no": 0, "site_no": 0, "cell_no": 0, "ch_no": 0, "cid_no": 0, "pci_no": 0, "tac_no": 0, "dir_no": 0, "lat_no": 0, "lon_no": 0, 
+                    "vendor_no": 0, "range_no": 0, "beam_no": 0, "bsic_no": 0, "lac_no":0}
     number = 0
     try:
         file = open(filename, "r", encoding="utf-8")
-        header = file.readline()[:-1]                   # read header line
-        header_list = header.split(separator)           # split parameters with SEPARATOR and store to list
+        header = file.readline()[:-1]                   # read header line, exclude line change
+        header_list = header.split(separator)           # split parameters with separator and store them to the header_list
         print("File contains following parameters: ", header_list, "\n")
         # Check that file contains the required parameters, if not exit the program
         if all(element in header_list for element in REQUIRED_PARAMETERS):
@@ -88,6 +94,7 @@ def read(list):
             elif parameter == "LAC":
                 parameter_no["lac_no"] += number
             number += 1
+            
         # Read through the file and append wanted values to class
         while True:
             line = file.readline()[:-1]         # leave line change out of the read
@@ -141,6 +148,7 @@ def handler(list):
     return None
 
 def cellfinder(list):
+    print("Available parameters:",CELLS.get_variables())
     user_input = input("Give parameter and value, exit with 0: ").strip()
     # Check if the user wants to exit
     if user_input == "0":
