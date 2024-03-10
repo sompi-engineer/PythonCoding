@@ -33,7 +33,7 @@ class CELLS:
 
 # Read given txt file, take header information and stores cell information to class
 def read(list):
-    user_input = input("Give text file (example 'bts.txt') and a separator separated by space, exit with 0: ").strip()
+    user_input = input("Give text file (example 'bts.txt') and a separator separated by space, or '0' to exit: ").strip()
         # Check if the user wants to exit
     if user_input == "0":
         return list
@@ -123,6 +123,7 @@ def read(list):
         print("Problem with file handling, closing...")
         sys.exit()
     header_list.clear()
+    file.close()
     return list
 
 # Search and list cells by systems
@@ -147,31 +148,57 @@ def handler(list):
     return None
 
 def cellfinder(list):
-    if not list:
-        print("List is empty, try to import file first.\n")
-    else:
-        print("Available parameters:",CELLS.get_variables())
-        user_input = input("Give parameter and value separated by space, exit with 0: ").strip()
-        # Check if the user wants to exit
-        if user_input == "0":
-            return None 
-        try:
-            # Try to split the input into parameter and value
-            parameter, value = user_input.split()
-        except ValueError:
-            # Handle case where input does not split into exactly two parts
-            print("Invalid input. Please provide a parameter and a value separated by space, or '0' to exit.\n")
-            cellfinder(list)
-            return
-        
-        found = False
-        print("\n")
-        for cell in list:
-            if getattr(cell, parameter, None) == value:
-                found = True
-                print(f"System: {cell.system}\nSite: {cell.site}\nCell: {cell.cell}\nChannel: {cell.ch}\nCID: {cell.cid}\nPCI: {cell.pci}\nTAC: {cell.tac}\nDirection: {cell.dir}\nLatitude: {cell.lat}\nLongitude: {cell.lon}\nVendor: {cell.vendor}\nRange: {cell.range}\nBeam width: {cell.beam}\nBSIC: {cell.bsic}\nLAC: {cell.lac}")
+    temp_cells = []
+    filename = open("output.txt", "w", encoding="utf-8")
+    filename.write(CELLS.get_variables().replace(" ", "").upper())
+    filename.write("\n")
+    while(True):
+        if not list:
+            print("List is empty, try to import file first.\n")
+            return None
+        else:
+            print("Available parameters:",CELLS.get_variables())
+            user_input = input("Give parameter and value separated by space, or '0' to exit: ").strip()
+            # Check if the user wants to exit
+            if user_input == "0":
+                break 
+            try:
+                # Try to split the input into parameter and value
+                parameter, value = user_input.split()
+            except ValueError:
+                # Handle case where input does not split into exactly two parts
+                print("Invalid input.\n")
+                continue
+            
+            found = False
+            print("\n")
+            # Searches cells with user given parameter and value
+            for cell in list:
+                if getattr(cell, parameter, None) == value:
+                    found = True
+                    print(f"System: {cell.system}\nSite: {cell.site}\nCell: {cell.cell}\nChannel: {cell.ch}\nCID: {cell.cid}\nPCI: {cell.pci}\nTAC: {cell.tac}\nDirection: {cell.dir}\nLatitude: {cell.lat}\nLongitude: {cell.lon}\nVendor: {cell.vendor}\nRange: {cell.range}\nBeam width: {cell.beam}\nBSIC: {cell.bsic}\nLAC: {cell.lac}")
+                    print("\n")
+                    temp = [cell.system,cell.site,cell.cell,cell.ch,cell.cid,cell.pci,cell.tac,cell.dir,cell.lat,cell.lon,cell.vendor,cell.range,cell.beam,cell.bsic,cell.lac]
+                    temp_cells.append(temp)
+            if not found:
+                print("Cells not found, try again\n")
+                cellfinder(list)
+            save = input("Do want to save the search results in file (y/n): ")
+            if save == "n":
+                print("Search results removed and not save to file.\n")
+                temp_cells.clear()
+                continue
+            elif save == "y":
                 print("\n")
-        if not found:
-            print("Cells not found, try again\n")
-            cellfinder(list)
+                for group in temp_cells:
+                    for value in group:
+                        filename.write(value)
+                        filename.write(",")
+                    filename.write("\n")
+                    continue
+            else:
+                print("Invalid selection. Search results removed.\n")
+                temp_cells.clear()
+                continue
+    filename.close()
     return None
