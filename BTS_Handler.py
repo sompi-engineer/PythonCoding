@@ -1,11 +1,11 @@
 ######################################################################
 # Creator: Antti Suomela
-# Date: 13.1.2024 (original version)
-# Handling of BTS information
+# Handling BTS information
 #######################################################################
 # Globals
 
-import BTS_HandlerLibrary
+import BTS_HandlerRead
+import BTS_HandlerSearch
 
 #######################################################################
 # Main program
@@ -24,15 +24,14 @@ if __name__ == "__main__":
         if (selection == 0):
             break
         elif (selection == 1):
-            list = BTS_HandlerLibrary.read(list)
+            list = BTS_HandlerRead.read(list)
         elif (selection == 2):
-            BTS_HandlerLibrary.handler(list)
+            BTS_HandlerSearch.handler(list)
         elif (selection == 3):
-            BTS_HandlerLibrary.cellfinder(list)
+            BTS_HandlerSearch.cellfinder(list)
         else:
             print("Invalid selection, try again...")
             
     list.clear()
-
 
 #eof
