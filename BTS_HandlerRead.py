@@ -1,6 +1,7 @@
 #######################################################################
 # Library
 import sys
+import BTS_HandlerCommon
 
 #######################################################################
 # Globals
@@ -36,6 +37,7 @@ def read(list):
     user_input = input("Give text file (example 'bts.txt') and a separator separated by space, or '0' to exit: ").strip()
         # Check if the user wants to exit
     if user_input == "0":
+        BTS_HandlerCommon.clear()
         return list
     try:
         # Try to split the input into filename and separator
@@ -59,8 +61,9 @@ def read(list):
         if all(element in header_list for element in REQUIRED_PARAMETERS):
             pass
         else:
-            print("Missing mandatory parameters {0}, closing...".format(REQUIRED_PARAMETERS))
-            sys.exit()
+            print("Missing mandatory parameters {0}, try again.\n".format(REQUIRED_PARAMETERS))
+            read(list)
+            return list
         # Resolve which column number contains required parameters
         for parameter in header_list:
             if parameter == "SYSTEM":
@@ -120,8 +123,9 @@ def read(list):
             list.append(cell)
         file.close()
     except Exception:
-        print("Problem with file handling, closing...")
-        sys.exit()
+        print("Problem with file handling, try again.\n")
+        read(list)
+        return list
     header_list.clear()
     file.close()
     return list
