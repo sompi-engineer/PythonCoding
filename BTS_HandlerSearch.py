@@ -39,8 +39,7 @@ def cellfinder(list):
     filename = open("output.txt", "w", encoding="utf-8")
     filename.write(CELLS.get_variables().replace(" ", "").upper())
     filename.write("\n")
-    repeat = True
-    while(repeat == True):
+    while(True):
         if not list:
             print("List is empty, try to import file first.\n")
             return None
