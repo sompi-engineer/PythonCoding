@@ -1,2 +1,5 @@
 output.txt
 __pycache__/
+build/
+dist/
+BTS_Handler.spec

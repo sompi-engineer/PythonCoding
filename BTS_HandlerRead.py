@@ -1,6 +1,7 @@
 #######################################################################
 # Library
 import sys
+import BTS_HandlerCommon
 
 #######################################################################
 # Globals
@@ -54,13 +55,13 @@ def read(list):
         file = open(filename, "r", encoding="utf-8")
         header = file.readline()[:-1]                   # read header line, exclude line change
         header_list = header.split(separator)           # split parameters with separator and store them to the header_list
-        print("\nFile contains following parameters: ", header_list, "\n")
         # Check that file contains the required parameters, if not exit the program
         if all(element in header_list for element in REQUIRED_PARAMETERS):
             pass
         else:
-            print("Missing mandatory parameters {0}, closing...".format(REQUIRED_PARAMETERS))
-            sys.exit()
+            print("Missing mandatory parameters {0}, try again.\n".format(REQUIRED_PARAMETERS))
+            read(list)
+            return list
         # Resolve which column number contains required parameters
         for parameter in header_list:
             if parameter == "SYSTEM":
@@ -120,8 +121,11 @@ def read(list):
             list.append(cell)
         file.close()
     except Exception:
-        print("Problem with file handling, closing...")
-        sys.exit()
-    header_list.clear()
+        print("Problem with file handling, try again.\n")
+        read(list)
+        return list
     file.close()
+    BTS_HandlerCommon.clear()
+    print("\nFile contains following parameters: ", header_list, "\n")
+    header_list.clear()
     return list
