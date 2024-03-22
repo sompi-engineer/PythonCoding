@@ -37,7 +37,6 @@ def read(list):
     user_input = input("Give text file (example 'bts.txt') and a separator separated by space, or '0' to exit: ").strip()
         # Check if the user wants to exit
     if user_input == "0":
-        BTS_HandlerCommon.clear()
         return list
     try:
         # Try to split the input into filename and separator
@@ -56,7 +55,6 @@ def read(list):
         file = open(filename, "r", encoding="utf-8")
         header = file.readline()[:-1]                   # read header line, exclude line change
         header_list = header.split(separator)           # split parameters with separator and store them to the header_list
-        print("\nFile contains following parameters: ", header_list, "\n")
         # Check that file contains the required parameters, if not exit the program
         if all(element in header_list for element in REQUIRED_PARAMETERS):
             pass
@@ -126,6 +124,8 @@ def read(list):
         print("Problem with file handling, try again.\n")
         read(list)
         return list
-    header_list.clear()
     file.close()
+    BTS_HandlerCommon.clear()
+    print("\nFile contains following parameters: ", header_list, "\n")
+    header_list.clear()
     return list

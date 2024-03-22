@@ -1,6 +1,7 @@
 #######################################################################
 # Library
 import sys
+import BTS_HandlerCommon
 from BTS_HandlerRead import CELLS
 
 #######################################################################
@@ -14,6 +15,7 @@ from BTS_HandlerRead import CELLS
 def handler(list):
     if not list:
         print("List is empty, try to import file first.\n")
+        BTS_HandlerCommon.clear()
     else:
         system = {"LTE": 0, "NR": 0, "GSM": 0, "UMTS": 0, "Other": 0}
         print("Cells by system:")
@@ -37,7 +39,8 @@ def cellfinder(list):
     filename = open("output.txt", "w", encoding="utf-8")
     filename.write(CELLS.get_variables().replace(" ", "").upper())
     filename.write("\n")
-    while(True):
+    repeat = True
+    while(repeat == True):
         if not list:
             print("List is empty, try to import file first.\n")
             return None
@@ -46,14 +49,16 @@ def cellfinder(list):
             user_input = input("Give parameter and value separated by space, or '0' to exit: ").strip()
             # Check if the user wants to exit
             if user_input == "0":
-                break 
-            try:
-                # Try to split the input into parameter and value
-                parameter, value = user_input.split()
-            except ValueError:
-                # Handle case where input does not split into exactly two parts
-                print("Invalid input.\n")
-                continue
+                BTS_HandlerCommon.clear()
+                return None
+            else: 
+                try:
+                    # Try to split the input into parameter and value
+                    parameter, value = user_input.split()
+                except ValueError:
+                    # Handle case where input does not split into exactly two parts
+                    print("Invalid input.\n")
+                    continue
             
             found = False
             print("\n")
@@ -67,7 +72,7 @@ def cellfinder(list):
                     temp_cells.append(temp)
             if not found:
                 print("Cells not found, try again\n")
-                cellfinder(list)
+                continue
             save = input("Do want to save the search results in file (y/n): ")
             if save == "n":
                 print("Search results removed and not save to file.\n")
@@ -86,4 +91,5 @@ def cellfinder(list):
                 temp_cells.clear()
                 continue
     filename.close()
+    BTS_HandlerCommon.clear()
     return None
