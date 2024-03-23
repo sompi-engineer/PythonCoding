@@ -41,6 +41,7 @@ def cellfinder(list):
     filename.write("\n")
     while(True):
         if not list:
+            BTS_HandlerCommon.clear()
             print("List is empty, try to import file first.\n")
             return None
         else:
@@ -48,33 +49,36 @@ def cellfinder(list):
             user_input = input("Give parameter and value separated by space, or '0' to exit: ").strip()
             # Check if the user wants to exit
             if user_input == "0":
-                BTS_HandlerCommon.clear()
-                return None
+                break
             else: 
                 try:
                     # Try to split the input into parameter and value
                     parameter, value = user_input.split()
                 except ValueError:
                     # Handle case where input does not split into exactly two parts
-                    print("Invalid input.\n")
+                    print("Invalid input, try again...\n")
                     continue
             
             found = False
+            counter = int(0)
             print("\n")
             # Searches cells with user given parameter and value
             for cell in list:
-                if getattr(cell, parameter, None) == value:
+                if getattr(cell, parameter.lower(), None) == value.upper():
                     found = True
+                    counter += 1
                     print(f"System: {cell.system}\nSite: {cell.site}\nCell: {cell.cell}\nChannel: {cell.ch}\nCID: {cell.cid}\nPCI: {cell.pci}\nTAC: {cell.tac}\nDirection: {cell.dir}\nLatitude: {cell.lat}\nLongitude: {cell.lon}\nVendor: {cell.vendor}\nRange: {cell.range}\nBeam width: {cell.beam}\nBSIC: {cell.bsic}\nLAC: {cell.lac}")
                     print("\n")
                     temp = [cell.system,cell.site,cell.cell,cell.ch,cell.cid,cell.pci,cell.tac,cell.dir,cell.lat,cell.lon,cell.vendor,cell.range,cell.beam,cell.bsic,cell.lac]
                     temp_cells.append(temp)
-            if not found:
-                print("Cells not found, try again\n")
+            if found:
+                print("Found", counter,"cells with given parameter value.\n")
+            elif not found:
+                print("Cells not found, try again...\n")
                 continue
-            save = input("Do want to save the search results in file (y/n): ")
+            save = input("Do you want to save the search results in file (y/n): ")
             if save == "n":
-                print("Search results removed and not save to file.\n")
+                print("Search results removed and not saved to file.\n")
                 temp_cells.clear()
                 continue
             elif save == "y":
